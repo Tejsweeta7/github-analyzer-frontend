@@ -9,7 +9,9 @@ import ResumeGenerator from "../Components/ResumeGenerator";
 import DeveloperScore from "../Components/DeveloperScore";
 import ProfileCard from "../Components/ProfileCard";
 
-const TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://github-analyzer-backend-znhx.onrender.com";
 
 function Dashboard() {
   const [username, setUsername] = useState("");
@@ -25,21 +27,11 @@ function Dashboard() {
         setLoading(true);
 
         const userRes = await axios.get(
-          `https://api.github.com/users/${username}`,
-          {
-            headers: {
-              Authorization: `Bearer ${TOKEN}`,
-            },
-          }
+          `${API_BASE_URL}/api/github/users/${username}`
         );
 
         const repoRes = await axios.get(
-          `https://api.github.com/users/${username}/repos?per_page=6&sort=updated`,
-          {
-            headers: {
-              Authorization: `Bearer ${TOKEN}`,
-            },
-          }
+          `${API_BASE_URL}/api/github/repos/${username}?per_page=6&sort=updated`
         );
 
         setUser(userRes.data);

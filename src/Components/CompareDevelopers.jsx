@@ -1,9 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 
-const TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://github-analyzer-backend-znhx.onrender.com";
 
 function CompareDevelopers() {
   const [username1, setUsername1] = useState("");
@@ -110,18 +110,10 @@ function CompareDevelopers() {
       }
 
       const [user1Res, repo1Res, user2Res, repo2Res] = await Promise.all([
-        axios.get(`https://api.github.com/users/${username1}`, {
-          headers: { Authorization: `Bearer ${TOKEN}` },
-        }),
-        axios.get(`https://api.github.com/users/${username1}/repos`, {
-          headers: { Authorization: `Bearer ${TOKEN}` },
-        }),
-        axios.get(`https://api.github.com/users/${username2}`, {
-          headers: { Authorization: `Bearer ${TOKEN}` },
-        }),
-        axios.get(`https://api.github.com/users/${username2}/repos`, {
-          headers: { Authorization: `Bearer ${TOKEN}` },
-        }),
+        axios.get(`${API_BASE_URL}/api/github/users/${username1}`),
+        axios.get(`${API_BASE_URL}/api/github/repos/${username1}`),
+        axios.get(`${API_BASE_URL}/api/github/users/${username2}`),
+        axios.get(`${API_BASE_URL}/api/github/repos/${username2}`),
       ]);
 
       const score1 = calculateScore(user1Res.data, repo1Res.data);
