@@ -17,6 +17,7 @@ function Dashboard() {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
   const [repos, setRepos] = useState([]);
+  const [displayRepos, setDisplayRepos] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -31,11 +32,12 @@ function Dashboard() {
         );
 
         const repoRes = await axios.get(
-          `${API_BASE_URL}/api/github/repos/${username}?per_page=6&sort=updated`
+          `${API_BASE_URL}/api/github/repos/${username}?sort=updated`
         );
 
         setUser(userRes.data);
         setRepos(repoRes.data);
+        setDisplayRepos(repoRes.data.slice(0, 6));
       } catch (err) {
         console.log("Error fetching data:", err);
       } finally {
@@ -93,11 +95,11 @@ function Dashboard() {
       )}
 
       {/* 📂 REPOS + LANGUAGES */}
-      {repos.length > 0 && !loading && (
+      {displayRepos.length > 0 && !loading && (
         <div className="max-w-5xl mx-auto mb-12 grid md:grid-cols-2 gap-8">
 
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-sm">
-            <RepoList repos={repos} />
+            <RepoList repos={displayRepos} />
           </div>
 
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-sm">
